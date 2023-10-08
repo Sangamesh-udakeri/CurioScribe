@@ -3,6 +3,7 @@ package com.project.bot;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -21,6 +22,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 	UserRepository userRepository;
 	@Autowired
 	TopicRepository topicRepository;
+
 	public TelegramBot() {
 
 		super("6257617301:AAGpdrB0zpRY2Bq5o1t3TjHd0bHbJUJuJgc");
@@ -33,9 +35,9 @@ public class TelegramBot extends TelegramLongPollingBot {
 
 	}
 
-	public void sendWelcomeMessage(Long chatId,String name) {
+	public void sendWelcomeMessage(Long chatId, String name) {
 		SendMessage sendMessage = new SendMessage();
-		sendMessage.setText("Welcome to my NotifyMe "+ name +" Happy Learning");
+		sendMessage.setText("Welcome to my NotifyMe " + name + " Happy Learning");
 		sendMessage.setChatId(chatId);
 		try {
 			execute(sendMessage);
@@ -43,21 +45,21 @@ public class TelegramBot extends TelegramLongPollingBot {
 			e.printStackTrace();
 		}
 	}
-	
-	public void sendSubscriptionMessage(Long userId,Long topicId) {
-		
+
+	public void sendSubscriptionMessage(Long userId, Long topicId) {
+
 		Long chatId = null;
-		String topicName=null;
+		String topicName = null;
 		SendMessage sendMessage = new SendMessage();
 		Optional<Topic> findById2 = topicRepository.findById(topicId);
 		Optional<User> findById = userRepository.findById(userId);
-		if(findById.isPresent()) {
+		if (findById.isPresent()) {
 			User user = findById.get();
 			Topic topic = findById2.get();
-			topicName=topic.getTopicName();
+			topicName = topic.getTopicName();
 			chatId = user.getChatId();
 		}
-		sendMessage.setText("You have subscribed to topic " +topicName);
+		sendMessage.setText("You have subscribed to topic " + topicName);
 		sendMessage.setChatId(chatId);
 		try {
 			execute(sendMessage);
@@ -65,6 +67,29 @@ public class TelegramBot extends TelegramLongPollingBot {
 			e.printStackTrace();
 		}
 	}
+
+	public void sendQuestionToUser(Long userId, com.project.mapping.Problem problem) {
+	    Long chatId = null;
+	    Optional<User> findById = userRepository.findById(userId);
+	    if (findById.isPresent()) {
+	        User user = findById.get();
+	        chatId = user.getChatId();
+	        
+	        if (chatId != null) {
+	            SendMessage sendMessage = new SendMessage();
+	            sendMessage.setChatId(chatId);
+	            sendMessage.setText(problem.toString());
+	            try {
+	                execute(sendMessage);
+	            } catch (TelegramApiException e) {
+	                e.printStackTrace();
+	            }
+	        } else {
+	        	
+	        }
+	    }
+	}
+
 
 	@Override
 	public String getBotUsername() {
