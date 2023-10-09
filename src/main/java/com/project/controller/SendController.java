@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,11 +24,20 @@ public class SendController {
 	@Autowired
 	UserRepository userRepository;
 
-	@GetMapping("/sendquestion")
-	public String sendQuestionToUser() throws Throwable {
+	@GetMapping("/sendquestion/{id}")
+	public String sendQuestionToUser(@PathVariable Long id) throws Throwable {
 		List<User> findAll = userRepository.findAll();
-		for (User u : findAll) {
-			telegramBot.sendQuestionToUser(u.getId(), questionService.getQuestion((long) 1));
+		for (User user : findAll) {
+			telegramBot.sendQuestionToUser(user.getId(), questionService.getQuestion((long) id));
+		}
+		return "done";
+
+	}
+	@GetMapping("/sendAplitudequestion/{id}")
+	public String sendAplitudeQuestionToUser(@PathVariable Long id) throws Throwable {
+		List<User> findAll = userRepository.findAll();
+		for (User user : findAll) {
+			telegramBot.sendAplitudeQuestionToUser(user.getId(), questionService.getAplitudeProblem((long) id));
 		}
 		return "done";
 

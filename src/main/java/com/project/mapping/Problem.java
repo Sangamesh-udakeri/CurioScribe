@@ -26,4 +26,17 @@ public class Problem {
     @JsonProperty("problemBody")
     private ProblemBody problemBody;
 
+	@Override
+	public String toString() {
+		return "problemId=" + problemId + "\n" +
+		           "ProblemName=" + problemName + "\n" +
+		           "ProblemType=" + problemType + "\n" +
+		           "ProblemLevel=" + problemLevel + "\n" +
+		           "Acceptance=" + acceptance + "\n" +
+		            problemBody.getDescription() +"\n" +
+		            "Exmp1=" + problemBody.getExmp1() + "\n"+
+					"Exmp2=" + problemBody.getExmp2() + "\n"+
+					"Constrainsts=" + problemBody.getConstrainsts();
+	}
+
 }

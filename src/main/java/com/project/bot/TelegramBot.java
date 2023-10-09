@@ -89,6 +89,27 @@ public class TelegramBot extends TelegramLongPollingBot {
 	        }
 	    }
 	}
+	public void sendAplitudeQuestionToUser(Long userId, com.project.mapping.AplitudeProblem problem) {
+	    Long chatId = null;
+	    Optional<User> findById = userRepository.findById(userId);
+	    if (findById.isPresent()) {
+	        User user = findById.get();
+	        chatId = user.getChatId();
+	        
+	        if (chatId != null) {
+	            SendMessage sendMessage = new SendMessage();
+	            sendMessage.setChatId(chatId);
+	            sendMessage.setText(problem.toString());
+	            try {
+	                execute(sendMessage);
+	            } catch (TelegramApiException e) {
+	                e.printStackTrace();
+	            }
+	        } else {
+	        	
+	        }
+	    }
+	}
 
 
 	@Override
