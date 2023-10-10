@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class AplitudeProblem {
+public class DbmsProblem {
 
-	@JsonProperty("questionId")
+	
 	private Long id;
 	@JsonProperty("questionType")
 	private String questionType;

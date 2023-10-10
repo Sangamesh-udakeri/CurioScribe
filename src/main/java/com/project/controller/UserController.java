@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,8 @@ import com.project.dto.SubscribeUserToTopicRequest;
 import com.project.dto.SubscriptionRequest;
 import com.project.model.Topic;
 import com.project.model.User;
+import com.project.repository.TopicRepository;
+import com.project.service.TopicService;
 import com.project.service.UserService;
 import com.project.service.UserServiceImpl;
 @RestController
@@ -33,7 +36,9 @@ public class UserController {
     private UserService userService;
     @Autowired 
     TelegramBot telegramBot;
-    
+    @Autowired
+    TopicService topicService;
+
     @PostMapping("/register")
     public ResponseEntity< String> registerUser(@RequestBody RegisterRequest registerRequest) {
         String registerUser = userService.registerUser(registerRequest);
@@ -58,6 +63,11 @@ public class UserController {
     public ResponseEntity<List<Topic>> getAllTopics(){
     	List<Topic> allTopics = userService.getAllTopics();
     	 return new ResponseEntity<List<Topic>>(allTopics,HttpStatus.OK);
+    }
+    @DeleteMapping("/unsubscribe/{userId}/{topicId}")
+    public ResponseEntity<String> unSubscribe(Long userId, Long topicId){
+       String unsubscribeUserFromTopic = topicService.unsubscribeUserFromTopic(userId, topicId);
+       return new ResponseEntity<String>(unsubscribeUserFromTopic,HttpStatus.OK);
     }
     
 

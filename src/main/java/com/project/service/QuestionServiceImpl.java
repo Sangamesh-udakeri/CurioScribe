@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.mapping.AplitudeProblem;
+import com.project.mapping.DbmsProblem;
 import com.project.mapping.Problem;
 
 @Service
@@ -38,4 +39,15 @@ public class QuestionServiceImpl implements QuestionService {
 		return objectMapper.readValue(jsonResponse, AplitudeProblem.class);
 		
 	}
+
+	@Override
+	public DbmsProblem getDbmsProblem(Long id) throws JsonMappingException, JsonProcessingException {
+		String url="http://localhost:1010/DBMS/getquestionbyid/{id}";
+		Map<String, Object> uriVariables=new HashMap<>();
+		uriVariables.put("id", id);
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, uriVariables);
+		String jsonResponse = response.getBody();
+		return objectMapper.readValue(jsonResponse, DbmsProblem.class);
+	}
+	
 }
